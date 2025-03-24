@@ -38,7 +38,7 @@ export default class Register extends Command {
 
         if (data.channels[interaction.guild.id] && Object.entries(data.channels[interaction.guild.id]).find(async ([id, channelInfo]) => {
             if (interaction.guild && !interaction.guild.channels.cache.find((channel) => channel.id === id)) {
-                data.deleteChannel(interaction.guild.id, id);
+                await data.deleteChannel(interaction.guild.id, id);
                 return false;
             }
             if (channelInfo.timeZone === timeZone) {
@@ -68,7 +68,7 @@ export default class Register extends Command {
         if (!data.channels[interaction.guild.id])
             data.channels[interaction.guild.id] = {};
         data.channels[interaction.guild.id][channel.id] = channelInfo;
-        data.save();
+        await data.save();
         jobs.add(channel.id, setupCron(channel, channelInfo, data));
     }
 

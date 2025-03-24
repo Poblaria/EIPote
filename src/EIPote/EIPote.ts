@@ -10,7 +10,7 @@ export default class EIPote {
 
     private commands = new Collection<string, Command>();
 
-    private data: Data;
+    private readonly data: Data;
 
     private jobs: Jobs = new Jobs;
 
@@ -36,7 +36,7 @@ export default class EIPote {
     async start() {
         this.client.once(Events.ClientReady, this.ready.bind(this));
         this.client.on(Events.InteractionCreate, this.interactionCreate.bind(this));
-        this.client.login();
+        await this.client.login();
     }
 
     private async registerCommands(client: Client<true>) {
@@ -56,16 +56,16 @@ export default class EIPote {
         }
     }
 
-    private ready(client: Client<true>) {
+    private async ready(client: Client<true>) {
         console.log(`Ready! Logged in as ${client.user.tag}`);
 
-        this.registerCommands(client);
+        await this.registerCommands(client);
 
         Object.entries(this.data.channels).forEach(([guildId, guild]) => Object.entries(guild).forEach(([id, channelInfo]) => {
             client.channels.fetch(id)
-                .then((channel) => {
+                .then(async (channel) => {
                     if (!channel || channel.type !== ChannelType.GuildVoice) {
-                        this.data.deleteChannel(guildId, id);
+                        await this.data.deleteChannel(guildId, id);
                         return;
                     }
 

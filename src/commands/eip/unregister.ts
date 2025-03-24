@@ -57,18 +57,14 @@ export default class Unregister extends Command {
         const channelToDelete = toDelete ? interaction.guild.channels.cache.find((guildChannel) => guildChannel.id === toDelete[0]) : undefined;
 
         if (!toDelete || !channelToDelete) {
-            await interaction.reply({ content: "The channel is inexistent or is not managed by me", flags: MessageFlags.Ephemeral });
+            await interaction.reply({ content: "The channel is non-existent or is not managed by me", flags: MessageFlags.Ephemeral });
             return;
         }
 
-        if (!channelToDelete.delete()) {
-            await interaction.reply({ content: "Unable to delete channel", flags: MessageFlags.Ephemeral });
-            return;
-        }
+        await channelToDelete.delete();
+        await interaction.reply({ content: `${toDelete[1].name} channel with time zone ${toDelete[1].timeZone} (*${channelToDelete.name}*) successfully deleted`, flags: MessageFlags.Ephemeral });
 
-        await interaction.reply({ content: `${toDelete[1].name} channel with time zone ${toDelete[1].timeZone} (*${channelToDelete.name}*) successfuly deleted`, flags: MessageFlags.Ephemeral });
-
-        data.deleteChannel(interaction.guild.id, channelToDelete.id);
+        await data.deleteChannel(interaction.guild.id, channelToDelete.id);
         jobs.remove(channelToDelete.id);
     }
 

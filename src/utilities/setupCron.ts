@@ -9,9 +9,9 @@ export default function setupCron(channel: VoiceChannel, channelInfo: ChannelInf
         // Every hour at 0 minute 0 second
         cronTime: "0 0 * * * *",
         onTick: () => {
-            channel.setName(getChannelName(channelInfo)).catch((error) => {
+            channel.setName(getChannelName(channelInfo)).catch(async (error) => {
                 if (error.code === 10003)
-                    data.deleteChannel(channel.guild.id, channel.id);
+                    await data.deleteChannel(channel.guild.id, channel.id);
                 else
                     console.error(error);
 

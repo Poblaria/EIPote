@@ -6,7 +6,7 @@ export type ChannelInfo = {
 export default class Data {
     channels: Record<string, Record<string, ChannelInfo>> = {};
 
-    private dataFile: string;
+    private readonly dataFile: string;
 
     private constructor(dataFile: string) {
         this.dataFile = dataFile;
@@ -35,13 +35,13 @@ export default class Data {
         }));
     }
 
-    editChannel(guildId: string, id: string, channelInfo: ChannelInfo) {
+    async editChannel(guildId: string, id: string, channelInfo: ChannelInfo) {
         this.channels[guildId][id] = channelInfo;
-        this.save();
+        await this.save();
     }
 
-    deleteChannel(guildId: string, id: string) {
+    async deleteChannel(guildId: string, id: string) {
         delete this.channels[guildId][id];
-        this.save();
+        await this.save();
     }
 };

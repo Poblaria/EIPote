@@ -34,8 +34,6 @@ export default class Edit extends Command {
             .setRequired(false)
         );
 
-    private timeZones = Intl.supportedValuesOf("timeZone");
-
     async execute(interaction: ChatInputCommandInteraction, data: Data, jobs: Jobs) {
         if (!interaction.guild) {
             await interaction.reply({ content: "Please run this command in a guild", flags: MessageFlags.Ephemeral });
@@ -74,7 +72,7 @@ export default class Edit extends Command {
         const channelToEdit = toEdit ? interaction.guild.channels.cache.find((guildChannel) => guildChannel.id === toEdit[0]) : undefined;
 
         if (!toEdit || !channelToEdit || channelToEdit.type !== ChannelType.GuildVoice) {
-            await interaction.reply({ content: "The channel is inexistent or is not managed by me", flags: MessageFlags.Ephemeral });
+            await interaction.reply({ content: "The channel is non-existent or is not managed by me", flags: MessageFlags.Ephemeral });
             return;
         }
 
@@ -85,14 +83,10 @@ export default class Edit extends Command {
 
         const channelInfo = { name: newChannelName || toEdit[1].name, timeZone: newTimeZone || toEdit[1].timeZone };
 
-        if (!channelToEdit.edit({ name: getChannelName(channelInfo) })) {
-            await interaction.reply({ content: "Unable to delete channel", flags: MessageFlags.Ephemeral });
-            return;
-        }
+        await channelToEdit.edit({ name: getChannelName(channelInfo) });
+        await interaction.reply({ content: `${toEdit[1].name} channel with time zone ${toEdit[1].timeZone} successfully edited with new name ${channelInfo.name} and new time zone ${channelInfo.timeZone} (<#${channelToEdit.id}>)`, flags: MessageFlags.Ephemeral });
 
-        await interaction.reply({ content: `${toEdit[1].name} channel with time zone ${toEdit[1].timeZone} successfuly edited with new name ${channelInfo.name} and new time zone ${channelInfo.timeZone} (<#${channelToEdit.id}>)`, flags: MessageFlags.Ephemeral });
-
-        data.editChannel(interaction.guild.id, channelToEdit.id, channelInfo);
+        await data.editChannel(interaction.guild.id, channelToEdit.id, channelInfo);
         jobs.edit(channelToEdit.id, setupCron(channelToEdit, channelInfo, data));
     }
 

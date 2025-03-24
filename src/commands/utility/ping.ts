@@ -9,6 +9,7 @@ export default class Ping extends Command {
     async execute(interaction: ChatInputCommandInteraction) {
         const reply = `Pong!\nWebsocket heartbeat: ${interaction.client.ws.ping}ms.\nRoundtrip latency: Pinging...`;
         const sent = await interaction.reply(reply);
-        interaction.editReply(reply.replace("Pinging...", `${sent.createdTimestamp - interaction.createdTimestamp}ms`));
+
+        await interaction.editReply(reply.replace("Pinging...", `${sent.createdTimestamp - interaction.createdTimestamp}ms`));
     }
 }
