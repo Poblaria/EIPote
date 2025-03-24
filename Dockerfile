@@ -28,6 +28,9 @@ COPY --from=prerelease /usr/src/app/src/ /usr/src/app/src/
 COPY --from=prerelease /usr/src/app/package.json .
 COPY --from=prerelease /usr/src/app/tsconfig.json .
 
+# set permissions for the directory
+RUN chown -R bun:bun /usr/src/app
+
 # run the app
 USER bun
 ENTRYPOINT [ "bun", "run", "src/main.ts" ]
