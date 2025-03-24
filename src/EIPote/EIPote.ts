@@ -83,7 +83,7 @@ export default class EIPote {
             const command = this.commands.get(interaction.commandName);
 
             if (!command) {
-                console.error(`No command matching ${interaction.commandName} was found.`);
+                console.error(`No command matching \`${interaction.commandName}\` was found.`);
                 return;
             }
 
@@ -101,7 +101,7 @@ export default class EIPote {
             const command = this.commands.get(interaction.commandName);
 
             if (!command || !command.autocomplete) {
-                console.error(`No command or autocomplete matching ${interaction.commandName} was found.`);
+                console.error(`No command or autocomplete method matching \`${interaction.commandName}\` was found.`);
                 return;
             }
 
