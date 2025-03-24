@@ -4,7 +4,6 @@ import setupCron from "@/utilities/setupCron";
 import type Data from "@/EIPote/Data";
 import type Jobs from "@/EIPote/Jobs";
 import Command from "@commands/Command";
-import Register from "./register";
 
 export default class Edit extends Command {
     data = new SlashCommandBuilder()
@@ -33,6 +32,8 @@ export default class Edit extends Command {
             .setDescription("A new channel name")
             .setRequired(false)
         );
+
+    private timeZones = Intl.supportedValuesOf("timeZone");
 
     async execute(interaction: ChatInputCommandInteraction, data: Data, jobs: Jobs) {
         if (!interaction.guild) {
@@ -138,7 +139,22 @@ export default class Edit extends Command {
             );
             break;
         case "new_time_zone":
-            await Register.autocomplete(interaction);
+            await interaction.respond(
+                this.timeZones
+                    .filter((timeZone) => timeZone
+                        .toLocaleLowerCase()
+                        .includes(
+                            interaction.options
+                                .getFocused()
+                                .toLocaleLowerCase()
+                        )
+                    )
+                    .slice(0, 25)
+                    .map((timeZone) => ({
+                        name: timeZone,
+                        value: timeZone
+                    }))
+            );
             break;
         default:
             console.error(`Cannot autocomplete ${optionName} interaction option`);

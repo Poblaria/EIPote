@@ -19,7 +19,7 @@ export default class Register extends Command {
             .setRequired(false)
         );
 
-    private static timeZones = Intl.supportedValuesOf("timeZone");
+    private timeZones = Intl.supportedValuesOf("timeZone");
 
     async execute(interaction: ChatInputCommandInteraction, data: Data, jobs: Jobs) {
         if (!interaction.guild) {
@@ -29,7 +29,7 @@ export default class Register extends Command {
 
         const timeZone = interaction.options.getString("time_zone");
 
-        if (!timeZone || !Register.timeZones.includes(timeZone)) {
+        if (!timeZone || !this.timeZones.includes(timeZone)) {
             await interaction.reply({ content: "Please provide a valid time zone", flags: MessageFlags.Ephemeral });
             return;
         }
@@ -72,9 +72,9 @@ export default class Register extends Command {
         jobs.add(channel.id, setupCron(channel, channelInfo, data));
     }
 
-    static async autocomplete(interaction: AutocompleteInteraction) {
+    async autocomplete(interaction: AutocompleteInteraction) {
         await interaction.respond(
-            Register.timeZones
+            this.timeZones
                 .filter((timeZone) => timeZone
                     .toLocaleLowerCase()
                     .includes(
