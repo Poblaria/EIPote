@@ -4,7 +4,7 @@ import Command from "@commands/Command";
 export default class Ping extends Command {
     data = new SlashCommandBuilder()
         .setName("ping")
-        .setDescription("Replies with Pong!");
+        .setDescription("Replies with Pong! (And the latency)");
 
     async execute(interaction: ChatInputCommandInteraction) {
         const reply = `Pong!\nWebsocket heartbeat: ${interaction.client.ws.ping}ms.\nRoundtrip latency: Pinging...`;

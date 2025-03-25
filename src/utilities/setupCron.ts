@@ -4,7 +4,7 @@ import getChannelName from "@utilities/getChannelName";
 import type { ChannelInfo } from "@/EIPote/Data";
 import type Data from "@/EIPote/Data";
 
-export default function setupCron(channel: VoiceChannel, channelInfo: ChannelInfo, data: Data) {
+export default function setupCron(channel: VoiceChannel, channelInfo: ChannelInfo, data: Data, runOnInit = false) {
     const job = CronJob.from({
         // Every hour at 0 minute 0 second
         cronTime: "0 0 * * * *",
@@ -18,7 +18,8 @@ export default function setupCron(channel: VoiceChannel, channelInfo: ChannelInf
                 job.stop();
             });
         },
-        start: true
+        start: true,
+        runOnInit
     });
 
     return job;

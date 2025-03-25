@@ -69,7 +69,7 @@ export default class EIPote {
                         return;
                     }
 
-                    this.jobs.add(id, setupCron(channel, channelInfo, this.data));
+                    this.jobs.add(id, setupCron(channel, channelInfo, this.data, true));
                 })
                 .catch((error) => {
                     if (error.code === 10003) this.data.deleteChannel(guildId, id);
