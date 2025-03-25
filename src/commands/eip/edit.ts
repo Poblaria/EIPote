@@ -60,7 +60,7 @@ export default class Edit extends Command {
             return;
         }
 
-        const toEdit = Object.entries(data.channels[interaction.guild.id]).find(([id, channelInfo]) => {
+        const toEdit = data.channels[interaction.guild.id] ? Object.entries(data.channels[interaction.guild.id]).find(([id, channelInfo]) => {
             if (timeZone)
                 return channelInfo.timeZone === timeZone;
             else if (channelName)
@@ -68,7 +68,7 @@ export default class Edit extends Command {
             else if (channel)
                 return id === channel.id;
             return false;
-        });
+        }) : undefined;
 
         const channelToEdit = toEdit ? interaction.guild.channels.cache.find((guildChannel) => guildChannel.id === toEdit[0]) : undefined;
 
@@ -101,6 +101,10 @@ export default class Edit extends Command {
 
         switch (optionName) {
         case "time_zone":
+            if (!data.channels[interaction.guild.id]) {
+                await interaction.respond([]);
+                return;
+            }
             await interaction.respond(
                 Object.values(data.channels[interaction.guild.id])
                     .filter((channelInfo) => channelInfo.timeZone
@@ -120,6 +124,10 @@ export default class Edit extends Command {
             );
             break;
         case "channel_name":
+            if (!data.channels[interaction.guild.id]) {
+                await interaction.respond([]);
+                return;
+            }
             await interaction.respond(
                 Object.values(data.channels[interaction.guild.id])
                     .filter((channelInfo) => channelInfo.name

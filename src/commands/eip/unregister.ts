@@ -44,7 +44,7 @@ export default class Unregister extends Command {
             return;
         }
 
-        const toDelete = Object.entries(data.channels[interaction.guild.id]).find(([id, channelInfo]) => {
+        const toDelete = data.channels[interaction.guild.id] ? Object.entries(data.channels[interaction.guild.id]).find(([id, channelInfo]) => {
             if (timeZone)
                 return channelInfo.timeZone === timeZone;
             else if (channelName)
@@ -52,7 +52,7 @@ export default class Unregister extends Command {
             else if (channel)
                 return id === channel.id;
             return false;
-        });
+        }) : undefined;
 
         const channelToDelete = toDelete ? interaction.guild.channels.cache.find((guildChannel) => guildChannel.id === toDelete[0]) : undefined;
 
@@ -78,6 +78,10 @@ export default class Unregister extends Command {
 
         switch (optionName) {
         case "time_zone":
+            if (!data.channels[interaction.guild.id]) {
+                await interaction.respond([]);
+                return;
+            }
             await interaction.respond(
                 Object.values(data.channels[interaction.guild.id])
                     .filter((channelInfo) => channelInfo.timeZone
@@ -97,6 +101,10 @@ export default class Unregister extends Command {
             );
             break;
         case "channel_name":
+            if (!data.channels[interaction.guild.id]) {
+                await interaction.respond([]);
+                return;
+            }
             await interaction.respond(
                 Object.values(data.channels[interaction.guild.id])
                     .filter((channelInfo) => channelInfo.name
