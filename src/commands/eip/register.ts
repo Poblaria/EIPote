@@ -36,17 +36,17 @@ export default class Register extends Command {
 
         const channelName = interaction.options.getString("channel_name") || timeZone;
 
-        if (data.channels[interaction.guild.id] && Object.entries(data.channels[interaction.guild.id]).find(async ([id, channelInfo]) => {
+        if (data.channels[interaction.guild.id] && Object.entries(data.channels[interaction.guild.id]).find(([id, channelInfo]) => {
             if (interaction.guild && !interaction.guild.channels.cache.find((channel) => channel.id === id)) {
-                await data.deleteChannel(interaction.guild.id, id);
+                data.deleteChannel(interaction.guild.id, id);
                 return false;
             }
             if (channelInfo.timeZone === timeZone) {
-                await interaction.reply({ content: `A channel with this time zone already exists: ${channelInfo.name} (<#${id}>)`, flags: MessageFlags.Ephemeral });
+                interaction.reply({ content: `A channel with this time zone already exists: ${channelInfo.name} (<#${id}>)`, flags: MessageFlags.Ephemeral });
                 return true;
             }
             if (channelInfo.name === channelName) {
-                await interaction.reply({ content: `A channel with this name already exists: ${channelInfo.name} (<#${id}>)`, flags: MessageFlags.Ephemeral });
+                interaction.reply({ content: `A channel with this name already exists: ${channelInfo.name} (<#${id}>)`, flags: MessageFlags.Ephemeral });
                 return true;
             }
             return false;
